@@ -7,5 +7,8 @@
     @foreach($users as $user)
         <div class="user-name">{{ $user->name }} ({{ $user->email }})</div>
     @endforeach
+
+
+    {{ $users->links() }}
 @endsection
 

@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 { 
     public function index()
     {
-        $users = User::all();
+        $users = User::paginate(2);
+
+        
+
         return view ('users.index', [
             'greeting' => 'Hello World!',
             'users' => $users
@@ -19,6 +23,27 @@ class UserController extends Controller
     public function create()
     {
         return view('users.create');
+    }
+
+    public function store(Request $request)
+    {
+        $input = $request ->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:3',
+            'avatar' => 'file'
+        ]);
+
+        if(!empty($input['avatar']) && $input['avatar'] -> isValid()){
+            $url = $input['avatar'] -> store();
+            dd($url);
+        }
+            
+
+        dd($input);
+        //User::create($input);
+
+        return redirect() -> back();
     }
 
     public function show(User $user)
